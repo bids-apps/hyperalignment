@@ -1,13 +1,6 @@
 ## Hyperalignment BIDS App (WiP)
-Every BIDS App needs to follow a minimal set of command arguments common across
-all of the Apps. This allows users and developers to easily use and integrate
-BIDS Apps with their environment.
 
-This is an minimalistic example BIDS App consisting of a Dockerfile and simple
-entrypoint script (written in this case in Python) accepting the standard BIDS
-Apps command line arguments.
-
-This App has the following comman line arguments:
+This App has the following common line arguments:
 
 		usage: run.py [-h]
 		              [--participant_label PARTICIPANT_LABEL [PARTICIPANT_LABEL ...]]
@@ -36,21 +29,19 @@ This App has the following comman line arguments:
 		                        all subjects should be analyzed. Multiple participants
 		                        can be specified with a space separated list.
 
-To run it in participant level mode (for one participant):
-
-    docker run -i --rm \
-		-v /Users/filo/data/ds005:/bids_dataset \
-		-v /Users/filo/outputs:/outputs \
-		bids/example \
-		/bids_dataset /outputs participant --participant_label 01
+Participant level mode prepares the data for hyperalignment.
+For now, it loads the data into PyMVPA readable datasets.
+In future, this will be modified to compute individual subject connectomes.
+    docker run -i --rm -v /Users/swaroop/ds005-deriv-3subjects/derivatives:/bids_dataset \
+        -v /Users/swaroop/outputs:/outputs \
+        hyperalignment \
+        /bids_dataset /outputs participant --task mixedgamblestask --run 01
 
 After doing this for all subjects (potentially in parallel) the group level analysis
-can be run:
+runs hyperalignment and saves transformation parameters.
 
-    docker run -i --rm \
-		-v /Users/filo/data/ds005:/bids_dataset \
-		-v /Users/filo/outputs:/outputs \
-		bids/example \
-		/bids_dataset /outputs group
+    docker run -i --rm -v /Users/swaroop/ds005-deriv-3subjects/derivatives:/bids_dataset \
+        -v /Users/swaroop/outputs:/outputs \
+        hyperalignment \
+        /bids_dataset /outputs group
 
-For more information about the specification of BIDS Apps see [here](https://docs.google.com/document/d/1E1Wi5ONvOVVnGhj21S1bmJJ4kyHFT7tkxnV3C23sjIE/edit#).
