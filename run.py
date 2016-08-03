@@ -3,9 +3,14 @@ import argparse
 import os
 import subprocess
 import nibabel
-import numpy
+import numpy as np
 from glob import glob
 from mvpa2.suite import *
+from mvpa2.base.hdf5 import h5save, h5load
+from mvpa2.algorithms.searchlight_hyperalignmet import SearchlightHyperalignment
+from mvpa2.datasets.mri import fmri_dataset
+from mvpa2.mappers.zscore import zscore
+
 
 parser = argparse.ArgumentParser(description='Example BIDS App entrypoint script.')
 parser.add_argument('bids_dir', help='The directory with the input dataset '
