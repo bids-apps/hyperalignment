@@ -126,4 +126,4 @@ elif args.analysis_level == "group":
     save_mappers(hmappers=hmappers, fname=hmappers_fname)
     with open(os.path.join(args.output_dir, "Transformation_matrix_shapes.txt"), 'w') as fp:
         for hm in hmappers:
-        fp.write("Transformation shape and non-zero elements : " % hm.proj.shape, hm.proj.data.size)
+            fp.write("Transformation shape and non-zero elements : " % hm.proj.shape, hm.proj.data.size)
