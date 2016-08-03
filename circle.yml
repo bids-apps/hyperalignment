@@ -1,0 +1,37 @@
+general:
+  artifacts:
+    - "~/outputs"
+machine:
+  pre:
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+  services:
+    - docker
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+    - "~/data"
+
+  override:
+  # google drive link to test data, thanks to Gael V. and Chris G.
+  # https://googledrive.com/host/0B2JWN60ZLkgkMEw4bW5VUUpSdFU/ds005-deriv-light.tar
+    - if [[ ! -d ~/data/ds005-deriv-3subjects/derivatives ]]; then wget -c -P ${HOME}/downloads/ "https://googledrive.com/host/0B2JWN60ZLkgkMEw4bW5VUUpSdFU/ds005-deriv-light.tar" && mkdir -p ${HOME}/data && tar xf ${HOME}/downloads/ds005-deriv-light.tar -C ${HOME}/data; fi
+    - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
+    - docker build -t bids/hyperalignment . :
+        timeout: 21600
+    - mkdir -p ~/docker; docker save "bids/hyperalignment" > ~/docker/image.tar
+    - mkdir -p ${HOME}/outputs
+
+test:
+  override:
+    - docker run -i -v ${HOME}/data/ds005-deriv-light/derivatives:/bids_dataset -v ${HOME}/outputs:/outputs bids/hyperalignment /bids_dataset /outputs participant --participant_label 01 :
+        timeout: 21600
+    - docker run -i -v ${HOME}/data/ds005-deriv-light/derivatives:/bids_dataset -v ${HOME}/outputs:/outputs bids/hyperalignment /bids_dataset /outputs participant --participant_label 02 :
+        timeout: 21600
+    - docker run -i -v ${HOME}/data/ds005-deriv-light/derivatives:/bids_dataset -v ${HOME}/outputs:/outputs bids/hyperalignment /bids_dataset /outputs group :
+        timeout: 21600
+#deployment:
+#  hub:
+#    branch: master
+#    commands:
+#      - if [[ -n "$DOCKER_PASS" ]]; then docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS && docker push $DOCKER_REPO; fi

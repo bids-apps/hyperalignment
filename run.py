@@ -48,7 +48,6 @@ else:
     subject_dirs = glob(os.path.join(args.bids_dir, "sub-*"))
     subjects_to_analyze = [subject_dir.split("-")[-1] for subject_dir in subject_dirs]
 
-# running participant level
 """
 At the participant level, load nifti data using mask and store it as hdf5 file.
 This can be adapted to compute connectomes later.
@@ -76,6 +75,11 @@ def run_hyperalignment(subjects_to_analyze, out_dir):
     return hmappers
 
 
+# This can be subject-level and be applied in parallel
+def apply_hyperalignment():
+    raise NotImplementedError
+
+
 """
 Helper functions to save and load mappers
 """
@@ -87,6 +91,8 @@ def save_mappers(hmappers, fname):
 
 def load_mappers(fname):
     return h5load(fname)
+
+# running participant level
 
 if args.analysis_level == "participant":
     # sub-01_task-mixedgamblestask_run-02_bold_hmc_mni.nii.gz
