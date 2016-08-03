@@ -124,3 +124,6 @@ elif args.analysis_level == "group":
     hmappers = run_hyperalignment(subjects_to_analyze, out_dir=args.output_dir)
     hmappers_fname = os.path.join(args.output_dir, 'hmappers.hdf5')
     save_mappers(hmappers=hmappers, fname=hmappers_fname)
+    with open(os.path.join(args.output_dir, "Transformation_matrix_shapes.txt"), 'w') as fp:
+        for hm in hmappers:
+        fp.write("Transformation shape and non-zero elements : " % hm.proj.shape, hm.proj.data.size)

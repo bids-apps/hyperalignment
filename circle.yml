@@ -24,9 +24,9 @@ dependencies:
 
 test:
   override:
-    - docker run -i -v ${HOME}/data/ds005-deriv-light/derivatives:/bids_dataset -v ${HOME}/outputs:/outputs bids/hyperalignment /bids_dataset /outputs participant --participant_label 01 :
+    - docker run -i -v ${HOME}/data/ds005-deriv-light/derivatives:/bids_dataset -v ${HOME}/outputs:/outputs bids/hyperalignment /bids_dataset /outputs participant --participant_label 01 --task mixedgamblestask --run 01 :
         timeout: 21600
-    - docker run -i -v ${HOME}/data/ds005-deriv-light/derivatives:/bids_dataset -v ${HOME}/outputs:/outputs bids/hyperalignment /bids_dataset /outputs participant --participant_label 02 :
+    - docker run -i -v ${HOME}/data/ds005-deriv-light/derivatives:/bids_dataset -v ${HOME}/outputs:/outputs bids/hyperalignment /bids_dataset /outputs participant --participant_label 02 --task mixedgamblestask --run 01 :
         timeout: 21600
     - docker run -i -v ${HOME}/data/ds005-deriv-light/derivatives:/bids_dataset -v ${HOME}/outputs:/outputs bids/hyperalignment /bids_dataset /outputs group :
         timeout: 21600
