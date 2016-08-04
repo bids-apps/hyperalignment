@@ -88,6 +88,6 @@ Hyperalignment works on preprocessed data with all the subjects' data aligned to
 
 Relevant references:  
 1. Guntupalli, J. S., Hanke, M., Halchenko, Y. O., Connolly, A. C., Ramadge, P. J. & Haxby, J. V. (2016). A Model of Representational Spaces in Human Cortex. Cerebral Cortex.
-    DOI: http://dx.doi.org/10.1093/cercor/bhw068
+    DOI: http://dx.doi.org/10.1093/cercor/bhw068  
 2. Haxby, J. V., Guntupalli, J. S., Connolly, A. C., Halchenko, Y. O., Conroy, B. R., Gobbini, M. I., Hanke, M. & Ramadge, P. J. (2011). A Common, High-Dimensional Model of the Representational Space in Human Ventral Temporal Cortex. Neuron, 72, 404–416.
     DOI: http://dx.doi.org/10.1016/j.neuron.2011.08.026  
