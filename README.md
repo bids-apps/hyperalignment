@@ -32,6 +32,7 @@ This App has the following common line arguments:
 Participant level mode prepares the data for hyperalignment.
 For now, it loads the data into PyMVPA readable datasets.
 In future, this will be modified to compute individual subject connectomes.
+
     docker run -i --rm -v /Users/swaroop/ds005-deriv-3subjects/derivatives:/bids_dataset \
         -v /Users/swaroop/outputs:/outputs \
         hyperalignment \
