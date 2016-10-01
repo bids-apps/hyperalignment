@@ -11,9 +11,9 @@ dependencies:
     - "~/data"
 
   override:
-  # google drive link to test data, thanks to Gael V. and Chris G.
-  # https://googledrive.com/host/0B2JWN60ZLkgkMEw4bW5VUUpSdFU/ds005-deriv-light.tar
-    - if [[ ! -d ~/data/ds005-deriv-light/derivatives ]]; then wget -c -O ${HOME}/downloads/ds005-deriv-light.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e549c2b83f6901d357d15f" && mkdir -p ${HOME}/data && tar xf ${HOME}/downloads/ds005-deriv-light.tar -C ${HOME}/data; fi
+  # OSF drive link to test data, thanks to Gael V. and Chris G.
+  # "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e549c2b83f6901d357d15f"
+    - if [[ ! -d ~/data/ds005-deriv-light/derivatives ]]; then wget -c -O ${HOME}/downloads/ds005-deriv-light.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e549c2b83f6901d357d15f" && mkdir -p ${HOME}/data && tar -xf ${HOME}/downloads/ds005-deriv-light.tar -C ${HOME}/data; fi
     - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
     - git describe --tags > version
     - docker build -t bids/hyperalignment . :
