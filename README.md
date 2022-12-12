@@ -1,6 +1,7 @@
 ## Hyperalignment BIDS App (WiP)
 
 ### Description
+
 Hyperalignment is a functional alignment method that aligns subjects' brain data in a 
 high-dimensional space of voxels/features. We showed that this alignment aligns subjects 
 at a fine-scale affording between-subject decoding and encoding 
@@ -11,6 +12,7 @@ For now, many parameters such as searchlight size, sparsity of centers, etc., ar
 Please use PyMVPA to modify these and other parameters for your use case.
 
 ### Documentation
+
 For a detailed documentation and examples, please see:  
 Hyperalignment in a ROI:  
 http://www.pymvpa.org/generated/mvpa2.algorithms.hyperalignment.Hyperalignment.html  
@@ -20,9 +22,11 @@ Example in PyMVPA:
 http://www.pymvpa.org/examples/hyperalignment.html  
 
 ### Acknowledgements
+
 If you use this in your project, please cite [Guntupalli et al. 2016](http://cercor.oxfordjournals.org/content/26/6/2919).
 
 ### Report Bugs/Issues
+
 Please use PyMVPA on github to report any bugs/issues or to contribute:
 https://github.com/PyMVPA/PyMVPA
 
@@ -84,9 +88,11 @@ runs hyperalignment and saves transformation parameters.
         /bids_dataset /outputs group
 
 ### Special requirements
+
 Hyperalignment works on preprocessed data with all the subjects' data aligned to the same template.
 
-### Relevant references:  
+### Relevant references
+
 1. Guntupalli, J. S., Hanke, M., Halchenko, Y. O., Connolly, A. C., Ramadge, P. J. & Haxby, J. V. (2016). A Model of Representational Spaces in Human Cortex. Cerebral Cortex.
     DOI: http://dx.doi.org/10.1093/cercor/bhw068  
 2. Haxby, J. V., Guntupalli, J. S., Connolly, A. C., Halchenko, Y. O., Conroy, B. R., Gobbini, M. I., Hanke, M. & Ramadge, P. J. (2011). A Common, High-Dimensional Model of the Representational Space in Human Ventral Temporal Cortex. Neuron, 72, 404–416.
