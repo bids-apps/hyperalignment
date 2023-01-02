@@ -128,5 +128,3 @@ elif args.analysis_level == "group":
         for hm in hmappers:
             fp.write("Transformation shape"
                      " and non-zero elements : %s %d" % ( (hm.proj.shape,), hm.proj.data.size))
-
-

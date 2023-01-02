@@ -2,9 +2,9 @@
 
 ### Description
 
-Hyperalignment is a functional alignment method that aligns subjects' brain data in a 
-high-dimensional space of voxels/features. We showed that this alignment aligns subjects 
-at a fine-scale affording between-subject decoding and encoding 
+Hyperalignment is a functional alignment method that aligns subjects' brain data in a
+high-dimensional space of voxels/features. We showed that this alignment aligns subjects
+at a fine-scale affording between-subject decoding and encoding
 [Guntupalli et al. 2016](http://cercor.oxfordjournals.org/content/26/6/2919). This app runs searchlight
 hyperalignment, which runs hyperalignment in multiple searchlights across the whole brain and
 aggregates them into a single transformation per subject.
@@ -13,13 +13,13 @@ Please use PyMVPA to modify these and other parameters for your use case.
 
 ### Documentation
 
-For a detailed documentation and examples, please see:  
-Hyperalignment in a ROI:  
-http://www.pymvpa.org/generated/mvpa2.algorithms.hyperalignment.Hyperalignment.html  
-Searchlight Hyperalignment:  
-https://github.com/PyMVPA/PyMVPA/blob/master/mvpa2/algorithms/searchlight_hyperalignment.py  
-Example in PyMVPA:  
-http://www.pymvpa.org/examples/hyperalignment.html  
+For a detailed documentation and examples, please see:
+Hyperalignment in a ROI:
+http://www.pymvpa.org/generated/mvpa2.algorithms.hyperalignment.Hyperalignment.html
+Searchlight Hyperalignment:
+https://github.com/PyMVPA/PyMVPA/blob/master/mvpa2/algorithms/searchlight_hyperalignment.py
+Example in PyMVPA:
+http://www.pymvpa.org/examples/hyperalignment.html
 
 ### Acknowledgements
 
@@ -33,7 +33,7 @@ https://github.com/PyMVPA/PyMVPA
 ### Usage
 
 		usage: run.py [-h]
-		              [--participant_label PARTICIPANT_LABEL [PARTICIPANT_LABEL ...] 
+		              [--participant_label PARTICIPANT_LABEL [PARTICIPANT_LABEL ...]
 		              --task TASK_LABEL --run RUN_LABEL]
 		              bids_dir output_dir {participant,group}
 
@@ -60,10 +60,10 @@ https://github.com/PyMVPA/PyMVPA
 		                        all subjects should be analyzed. Multiple participants
 		                        can be specified with a space separated list.
 		  --task TASK_LABEL     Name of the task that should be used for hyperalignment.
-		                        This correspnds to task-<TASK_LABEL> from the BIDS spec 
+		                        This correspnds to task-<TASK_LABEL> from the BIDS spec
 		                        (so it does not include "task-").
 		  --run RUN_LABEL       Name of the run that should be used for hyperalignment.
-		                        This correspnds to run-<TASK_LABEL> from the BIDS spec 
+		                        This correspnds to run-<TASK_LABEL> from the BIDS spec
 		                        (so it does not include "run-").
 
 
@@ -94,6 +94,6 @@ Hyperalignment works on preprocessed data with all the subjects' data aligned to
 ### Relevant references
 
 1. Guntupalli, J. S., Hanke, M., Halchenko, Y. O., Connolly, A. C., Ramadge, P. J. & Haxby, J. V. (2016). A Model of Representational Spaces in Human Cortex. Cerebral Cortex.
-    DOI: http://dx.doi.org/10.1093/cercor/bhw068  
+    DOI: http://dx.doi.org/10.1093/cercor/bhw068
 2. Haxby, J. V., Guntupalli, J. S., Connolly, A. C., Halchenko, Y. O., Conroy, B. R., Gobbini, M. I., Hanke, M. & Ramadge, P. J. (2011). A Common, High-Dimensional Model of the Representational Space in Human Ventral Temporal Cortex. Neuron, 72, 404–416.
-    DOI: http://dx.doi.org/10.1016/j.neuron.2011.08.026  
+    DOI: http://dx.doi.org/10.1016/j.neuron.2011.08.026
