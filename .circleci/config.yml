@@ -4,10 +4,8 @@ jobs:
   build:
     machine:
       image: ubuntu-2204:2022.10.2
-
     steps:
     - checkout
-
     - run:
         name: Get test data
         command: |
@@ -16,18 +14,11 @@ jobs:
             wget -c -O ${HOME}/ds005-deriv-light.tar "https://osf.io/download/ye7rx/" && \
             tar xf ${HOME}/ds005-deriv-light.tar -C ${HOME}/data
           fi
-
     - run:
         name: Build Docker image
         command: |
-          if [[ -e ${HOME}/docker/image.tar ]]; \
-            then docker load -i ${HOME}/docker/image.tar;
-          fi
-          git describe --tags --always > version
-          docker build -t bids/${CIRCLE_PROJECT_REPONAME,,} .
-          mkdir -p ${HOME}/docker
-          docker save "bids/${CIRCLE_PROJECT_REPONAME,,}" > ${HOME}/docker/image.tar
-
+          wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/circleci/build_docker.sh
+          bash build_docker.sh 
     - persist_to_workspace:
         root: /home/circleci
         paths:
@@ -41,9 +32,7 @@ jobs:
     - attach_workspace:
         at: /tmp/workspace
     - run: docker load -i /tmp/workspace/docker/image.tar
-
     - run: mkdir -p ${HOME}/outputs
-
     - run:
         name: run participant 01
         command: |
@@ -81,27 +70,18 @@ jobs:
             /bids_dataset /outputs group
         no_output_timeout: 6h
 
-
   deploy:
-
     machine:
       image: ubuntu-2204:2022.10.2
-
     steps:
     - attach_workspace:
         at: /tmp/workspace
-
-    - run: docker load -i /tmp/workspace/docker/image.tar
+    - run: docker load -i /tmp/workspace/image.tar
     - run:
         name: push to dockerhub
         command: |
-          docker login --username ${DOCKER_USER} --password ${DOCKER_PASS}
-          docker push bids/${CIRCLE_PROJECT_REPONAME,,}:unstable
-          if [[ -n "${CIRCLE_TAG}" ]]; then
-            docker push bids/${CIRCLE_PROJECT_REPONAME,,}:latest
-            docker tag bids/${CIRCLE_PROJECT_REPONAME,,} bids/${CIRCLE_PROJECT_REPONAME,,}:${CIRCLE_TAG}
-            docker push bids/${CIRCLE_PROJECT_REPONAME,,}:${CIRCLE_TAG}
-          fi
+          wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/circleci/push_docker.sh
+          bash push_docker.sh  
 
 
 workflows:
