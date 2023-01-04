@@ -1,5 +1,5 @@
 ---
-version: 2
+version: 2.1
 jobs:
   build:
     machine:
@@ -8,35 +8,30 @@ jobs:
     steps:
     - checkout
 
-    # OSF drive link to test data, thanks to Gael V. and Chris G.
-    # "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e549c2b83f6901d357d15f"
     - run:
         name: Get test data
         command: |
-          if [[ ! -d ~/data/ds005-deriv-light/derivatives ]]; then
-            wget -c -O ${HOME}/ds005-deriv-light.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e549c2b83f6901d357d15f" && \
-            mkdir -p ${HOME}/data && \
-            tar -xf ${HOME}/ds005-deriv-light.tar -C ${HOME}/data;
-          fi
-    - run:
-        name: Get test data
-        command: |
-          if [[ -e ~/docker/image.tar ]]; then \
-            docker load -i ~/docker/image.tar;
+          mkdir -p ${HOME}/data && \
+          if [[ ! -d ${HOME}/data/ds005-deriv-light/derivatives ]]; then
+            wget -c -O ${HOME}/ds005-deriv-light.tar "https://osf.io/download/ye7rx/" && \
+            tar xf ${HOME}/ds005-deriv-light.tar -C ${HOME}/data
           fi
 
     - run:
         name: Build Docker image
         command: |
+          if [[ -e ${HOME}/docker/image.tar ]]; \
+            then docker load -i ${HOME}/docker/image.tar;
+          fi
           git describe --tags --always > version
           docker build -t bids/${CIRCLE_PROJECT_REPONAME,,} .
           mkdir -p ${HOME}/docker
-          docker save "bids/${CIRCLE_PROJECT_REPONAME,,}" > ~/docker/image.tar
+          docker save "bids/${CIRCLE_PROJECT_REPONAME,,}" > ${HOME}/docker/image.tar
 
     - persist_to_workspace:
         root: /home/circleci
         paths:
-        - data/ds114_test1
+        - data/ds005-deriv-light
         - docker/image.tar
 
   test:
@@ -45,15 +40,16 @@ jobs:
     steps:
     - attach_workspace:
         at: /tmp/workspace
-    - setup_remote_docker
     - run: docker load -i /tmp/workspace/docker/image.tar
+
     - run: mkdir -p ${HOME}/outputs
+
     - run:
         name: run participant 01
         command: |
           docker run -ti --rm --read-only \
             -v /tmp:/tmp -v /var/tmp:/var/tmp \
-            -v ${HOME}/data/ds005-deriv-light/derivatives:/bids_dataset \
+            -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
             -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
             /bids_dataset /outputs participant --participant_label 01 --task mixedgamblestask --run 01
         no_output_timeout: 6h
@@ -62,7 +58,7 @@ jobs:
         command: |
           docker run -ti --rm --read-only \
             -v /tmp:/tmp -v /var/tmp:/var/tmp \
-            -v ${HOME}/data/ds005-deriv-light/derivatives:/bids_dataset \
+            -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
             -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
             /bids_dataset /outputs participant --participant_label 02 --task mixedgamblestask --run 01
         no_output_timeout: 6h
@@ -71,7 +67,7 @@ jobs:
         command: |
           docker run -ti --rm --read-only \
             -v /tmp:/tmp -v /var/tmp:/var/tmp \
-            -v ${HOME}/data/ds005-deriv-light/derivatives:/bids_dataset \
+            -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
             -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
             /bids_dataset /outputs participant --participant_label 03 --task mixedgamblestask --run 01
         no_output_timeout: 6h
@@ -80,29 +76,35 @@ jobs:
         command: |
           docker run -ti --rm --read-only \
             -v /tmp:/tmp -v /var/tmp:/var/tmp \
-            -v ${HOME}/data/ds005-deriv-light/derivatives:/bids_dataset \
+            -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
             -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
             /bids_dataset /outputs group
         no_output_timeout: 6h
 
+
   deploy:
-    docker:
-    - image: ubuntu-2204:2022.10.2
+
+    machine:
+      image: ubuntu-2204:2022.10.2
+
     steps:
     - attach_workspace:
         at: /tmp/workspace
-    - setup_remote_docker
+
     - run: docker load -i /tmp/workspace/docker/image.tar
-    - push:
+    - run:
+        name: push to dockerhub
         command: |
+          docker login --username ${DOCKER_USER} --password ${DOCKER_PASS}
+          docker push bids/${CIRCLE_PROJECT_REPONAME,,}:unstable
           if [[ -n "${CIRCLE_TAG}" ]]; then
-            docker login --username ${DOCKER_USER} --password ${DOCKER_PASS}
             docker push bids/${CIRCLE_PROJECT_REPONAME,,}:latest
             docker tag bids/${CIRCLE_PROJECT_REPONAME,,} bids/${CIRCLE_PROJECT_REPONAME,,}:${CIRCLE_TAG}
             docker push bids/${CIRCLE_PROJECT_REPONAME,,}:${CIRCLE_TAG}
           fi
+
+
 workflows:
-  version: 2
   build-test-deploy:
     jobs:
     - build
@@ -115,5 +117,4 @@ workflows:
         filters:
           tags:
             only: /.*/
-
 # VS Code Extension Version: 1.5.1
