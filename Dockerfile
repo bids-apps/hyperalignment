@@ -24,12 +24,16 @@ ENV DEBIAN_FRONTEND="noninteractive" \
 
 # PyMVPA
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends python2.7
+    apt-get install -y --no-install-recommends python2.7 && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    apt-get remove -f -y --purge fuse
 
 RUN apt-get update && \
     mkdir /dev/fuse && \
     chmod 777 /dev/fuse && \
-    apt-get install -y python-mvpa2 && \
+    apt-get install -y --no-install-recommends \
+        python-mvpa2 && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     apt-get remove -f -y --purge fuse
 
 RUN mkdir -p /code
