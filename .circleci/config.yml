@@ -5,96 +5,94 @@ jobs:
     machine:
       image: ubuntu-2204:2022.10.2
     steps:
-    - checkout
-    - run:
-        name: Get test data
-        command: |
-          mkdir -p ${HOME}/data && \
-          if [[ ! -d ${HOME}/data/ds005-deriv-light/derivatives ]]; then
-            wget -c -O ${HOME}/ds005-deriv-light.tar "https://osf.io/download/ye7rx/" && \
-            tar xf ${HOME}/ds005-deriv-light.tar -C ${HOME}/data
-          fi
-    - run:
-        name: Build Docker image
-        command: |
-          wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/circleci/build_docker.sh
-          bash build_docker.sh 
-    - persist_to_workspace:
-        root: /home/circleci
-        paths:
-        - data/ds005-deriv-light
-        - docker/image.tar
+      - checkout
+      - run:
+          name: Get test data
+          command: |
+            mkdir -p ${HOME}/data && \
+            if [[ ! -d ${HOME}/data/ds005-deriv-light/derivatives ]]; then
+              wget -c -O ${HOME}/ds005-deriv-light.tar "https://osf.io/download/ye7rx/" && \
+              tar xf ${HOME}/ds005-deriv-light.tar -C ${HOME}/data
+            fi
+      - run:
+          name: Build Docker image
+          command: |
+            wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/circleci/build_docker.sh
+            bash build_docker.sh
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - data/ds005-deriv-light
+            - docker/image.tar
 
   test:
     machine:
       image: ubuntu-2204:2022.10.2
     steps:
-    - attach_workspace:
-        at: /tmp/workspace
-    - run: docker load -i /tmp/workspace/docker/image.tar
-    - run: mkdir -p ${HOME}/outputs
-    - run:
-        name: run participant 01
-        command: |
-          docker run -ti --rm --read-only \
-            -v /tmp:/tmp -v /var/tmp:/var/tmp \
-            -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
-            -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
-            /bids_dataset /outputs participant --participant_label 01 --task mixedgamblestask --run 01
-        no_output_timeout: 6h
-    - run:
-        name: run participant 02
-        command: |
-          docker run -ti --rm --read-only \
-            -v /tmp:/tmp -v /var/tmp:/var/tmp \
-            -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
-            -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
-            /bids_dataset /outputs participant --participant_label 02 --task mixedgamblestask --run 01
-        no_output_timeout: 6h
-    - run:
-        name: run participant 03
-        command: |
-          docker run -ti --rm --read-only \
-            -v /tmp:/tmp -v /var/tmp:/var/tmp \
-            -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
-            -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
-            /bids_dataset /outputs participant --participant_label 03 --task mixedgamblestask --run 01
-        no_output_timeout: 6h
-    - run:
-        name: run group
-        command: |
-          docker run -ti --rm --read-only \
-            -v /tmp:/tmp -v /var/tmp:/var/tmp \
-            -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
-            -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
-            /bids_dataset /outputs group
-        no_output_timeout: 6h
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: docker load -i /tmp/workspace/docker/image.tar
+      - run: mkdir -p ${HOME}/outputs
+      - run:
+          name: run participant 01
+          command: |
+            docker run -ti --rm --read-only \
+              -v /tmp:/tmp -v /var/tmp:/var/tmp \
+              -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
+              -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
+              /bids_dataset /outputs participant --participant_label 01 --task mixedgamblestask --run 01
+          no_output_timeout: 6h
+      - run:
+          name: run participant 02
+          command: |
+            docker run -ti --rm --read-only \
+              -v /tmp:/tmp -v /var/tmp:/var/tmp \
+              -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
+              -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
+              /bids_dataset /outputs participant --participant_label 02 --task mixedgamblestask --run 01
+          no_output_timeout: 6h
+      - run:
+          name: run participant 03
+          command: |
+            docker run -ti --rm --read-only \
+              -v /tmp:/tmp -v /var/tmp:/var/tmp \
+              -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
+              -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
+              /bids_dataset /outputs participant --participant_label 03 --task mixedgamblestask --run 01
+          no_output_timeout: 6h
+      - run:
+          name: run group
+          command: |
+            docker run -ti --rm --read-only \
+              -v /tmp:/tmp -v /var/tmp:/var/tmp \
+              -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
+              -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
+              /bids_dataset /outputs group
+          no_output_timeout: 6h
 
   deploy:
     machine:
       image: ubuntu-2204:2022.10.2
     steps:
-    - attach_workspace:
-        at: /tmp/workspace
-    - run: docker load -i /tmp/workspace/image.tar
-    - run:
-        name: push to dockerhub
-        command: |
-          wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/circleci/push_docker.sh
-          bash push_docker.sh  
-
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: push to dockerhub
+          command: |
+            wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/circleci/push_docker.sh
+            bash push_docker.sh
 
 workflows:
   build-test-deploy:
     jobs:
-    - build
-    - test:
-        requires:
-        - build
-    - deploy:
-        requires:
-        - test
-        filters:
-          tags:
-            only: /.*/
-# VS Code Extension Version: 1.5.1
+      - build
+      - test:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /.*/
