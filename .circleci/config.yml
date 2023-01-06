@@ -9,11 +9,8 @@ jobs:
       - run:
           name: Get test data
           command: |
-            mkdir -p ${HOME}/data && \
-            if [[ ! -d ${HOME}/data/ds005-deriv-light/derivatives ]]; then
-              wget -c -O ${HOME}/ds005-deriv-light.tar "https://osf.io/download/ye7rx/" && \
-              tar xf ${HOME}/ds005-deriv-light.tar -C ${HOME}/data
-            fi
+            wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/utils/get_data_from_osf.sh
+            bash get_data_from_osf.sh ds005-deriv-light         
       - run:
           name: Build Docker image
           command: |
@@ -39,8 +36,14 @@ jobs:
             docker run -ti --rm --read-only \
               -v /tmp:/tmp -v /var/tmp:/var/tmp \
               -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
-              -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
-              /bids_dataset /outputs participant --participant_label 01 --task mixedgamblestask --run 01
+              -v ${HOME}/outputs:/outputs \
+                bids/${CIRCLE_PROJECT_REPONAME,,}" \
+                  /bids_dataset  \
+                  /outputs \
+                  participant \
+                  --participant_label 01 \
+                  --task mixedgamblestask \
+                  --run 01
           no_output_timeout: 6h
       - run:
           name: run participant 02
@@ -48,8 +51,14 @@ jobs:
             docker run -ti --rm --read-only \
               -v /tmp:/tmp -v /var/tmp:/var/tmp \
               -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
-              -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
-              /bids_dataset /outputs participant --participant_label 02 --task mixedgamblestask --run 01
+              -v ${HOME}/outputs:/outputs \
+                bids/${CIRCLE_PROJECT_REPONAME,,}" \
+                  /bids_dataset  \
+                  /outputs \
+                  participant \
+                  --participant_label 02 \
+                  --task mixedgamblestask \
+                  --run 01
           no_output_timeout: 6h
       - run:
           name: run participant 03
@@ -57,8 +66,14 @@ jobs:
             docker run -ti --rm --read-only \
               -v /tmp:/tmp -v /var/tmp:/var/tmp \
               -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
-              -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
-              /bids_dataset /outputs participant --participant_label 03 --task mixedgamblestask --run 01
+              -v ${HOME}/outputs:/outputs \
+                bids/${CIRCLE_PROJECT_REPONAME,,}" \
+                  /bids_dataset  \
+                  /outputs \
+                  participant \
+                  --participant_label 03 \
+                  --task mixedgamblestask \
+                  --run 01
           no_output_timeout: 6h
       - run:
           name: run group
@@ -66,8 +81,11 @@ jobs:
             docker run -ti --rm --read-only \
               -v /tmp:/tmp -v /var/tmp:/var/tmp \
               -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
-              -v ${HOME}/outputs:/outputs bids/${CIRCLE_PROJECT_REPONAME,,}" \
-              /bids_dataset /outputs group
+              -v ${HOME}/outputs:/outputs \
+                bids/${CIRCLE_PROJECT_REPONAME,,}" \
+                  /bids_dataset  \
+                  /outputs \
+                  group
           no_output_timeout: 6h
 
   deploy:
