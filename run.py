@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 import argparse
 import os
-import subprocess
-import nibabel
-import numpy as np
 from glob import glob
 from mvpa2.suite import *
 from mvpa2.base.hdf5 import h5save, h5load
