@@ -37,7 +37,7 @@ jobs:
             -v /tmp:/tmp -v /var/tmp:/var/tmp \
             -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
             -v ${HOME}/outputs:/outputs \
-              bids/${CIRCLE_PROJECT_REPONAME,,}" \
+              bids/"${CIRCLE_PROJECT_REPONAME,,}" \
                 /bids_dataset  \
                 /outputs \
                 participant \
@@ -52,7 +52,7 @@ jobs:
             -v /tmp:/tmp -v /var/tmp:/var/tmp \
             -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
             -v ${HOME}/outputs:/outputs \
-              bids/${CIRCLE_PROJECT_REPONAME,,}" \
+              bids/"${CIRCLE_PROJECT_REPONAME,,}" \
                 /bids_dataset  \
                 /outputs \
                 participant \
@@ -67,7 +67,7 @@ jobs:
             -v /tmp:/tmp -v /var/tmp:/var/tmp \
             -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
             -v ${HOME}/outputs:/outputs \
-              bids/${CIRCLE_PROJECT_REPONAME,,}" \
+              bids/"${CIRCLE_PROJECT_REPONAME,,}" \
                 /bids_dataset  \
                 /outputs \
                 participant \
@@ -82,7 +82,7 @@ jobs:
             -v /tmp:/tmp -v /var/tmp:/var/tmp \
             -v /tmp/workspace/data/ds005-deriv-light/derivatives:/bids_dataset \
             -v ${HOME}/outputs:/outputs \
-              bids/${CIRCLE_PROJECT_REPONAME,,}" \
+              bids/"${CIRCLE_PROJECT_REPONAME,,}" \
                 /bids_dataset  \
                 /outputs \
                 group
@@ -116,3 +116,5 @@ workflows:
         filters:
           tags:
             only: /.*/
+
+# VS Code Extension Version: 1.5.1
